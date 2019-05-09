@@ -113,29 +113,34 @@
                 mtype: "GET",
                 styleUI: 'Bootstrap',
                 datatype: "json",
-                colNames: ['代码', '名称', '市场', '价格', '昨收', '涨幅', 'PE(动)', 'PE(静)', '市净率', '总市值', '每股净资产', '股息(动)', '股息(静)', '5年平均股息','最新ROE','5年平均ROE', '上次分红', '行业'],
+                colNames: ['代码', '名称', '市场', '价格', '昨收', '涨幅', 'PE(动)',
+                    'PE(静)', '市净率', '总市值', '每股净资产', '股息(动)', '股息(静)',
+                    '5年平均股息','最新ROE','5年平均ROE', '上次分红', '行业','数量','购买','售出'],
                 colModel: [
 
-                    {label: 'code', name: 'code', width: 100},
-                    {label: 'name', name: 'name', width: 150},
+                    {label: 'code', name: 'code', width: 70},
+                    {label: 'name', name: 'name', width: 110},
                     {label: 'type', name: 'type', width: 40},
                     {label: 'price', name: 'price', width: 50, align: 'right'},
                     {label: 'yesterdayPrice', name: 'yesterdayPrice', width: 60, align: 'right'},
 
                     {label: 'fluctuate', name: 'fluctuate', width: 70, align: 'right'},
-                    {label: 'ped', name: 'ped', width: 70, align: 'right'},
-                    {label: 'pes', name: 'pes', width: 70, align: 'right'},
+                    {label: 'ped', name: 'ped', width: 60, align: 'right'},
+                    {label: 'pes', name: 'pes', width: 60, align: 'right'},
                     {label: 'pb', name: 'pb', width: 60, align: 'right'},
 
                     {label: 'totalValue', name: 'totalValue', width: 80, align: 'right'},
-                    {label: 'bvps', name: 'bvps', width: 90, align: 'right'},
+                    {label: 'bvps', name: 'bvps', width: 60, align: 'right'},
                     {label: 'dy', name: 'dy', width: 70, align: 'right'},
                     {label: 'dividend', name: 'dividend', width: 70, align: 'right'},
-                    {label: 'fiveYearDy', name: 'fiveYearDy', width: 90, align: 'right'},
+                    {label: 'fiveYearDy', name: 'fiveYearDy', width: 50, align: 'right'},
                     {label: 'roe', name: 'roe', width: 75, align: 'right'},
-                    {label: 'fiveYearRoe', name: 'fiveYearRoe', width: 96, align: 'right'},
+                    {label: 'fiveYearRoe', name: 'fiveYearRoe', width: 76, align: 'right'},
                     {label: 'dividendDate', name: 'dividendDate', width: 90},
-                    {label: 'industry', name: 'industry', width: 130}
+                    {label: 'industry', name: 'industry', width: 100},
+                    {label: 'quantity', name: 'quantity', width: 100},
+                    {label: 'buy',  name: 'buy',  width: 80, edittype:"button" , formatter:cmgBuyFormat },
+                    {label: 'sell', name: 'sell', width: 80, edittype:"button" , formatter:cmgSellFormat}
 //                {label: 'sVersion', name: 'sVersion', width: 650}
                 ],
                 viewrecords: true,
@@ -263,5 +268,21 @@
             var rowData = $("#jqGrid").jqGrid('getRowData', ids);
             window.open("/stock/info/" + rowData.code);
         });
+
+        // 2019-5-9 14:11:11 by cgj
+        function cmgBuyFormat() {
+            var shareCount=1;
+            if(shareCount>0){
+                return "<button class='btn btn-primary ' onclick=\"change()\">买入</button>" ;
+            }else{
+                return "<button class='btn btn-warning ' onclick=\"change()\">暂停</button>" ; }
+        }
+        function change() {}
+        function cmgSellFormat() {
+            var shareCount=0;
+            if(shareCount>0){
+                return "<button class='btn btn-primary ' onclick=\"change()\">售出</button>" ; }else{
+                return "<button class='btn btn-warning ' onclick=\"change()\">暂停</button>" ; }
+        }
     </script>
 </#compress>
