@@ -5,3 +5,5 @@
 *.iws
 .idea/
 out/
+
+/data/
