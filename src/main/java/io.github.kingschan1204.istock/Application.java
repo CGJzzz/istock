@@ -31,7 +31,13 @@ public class Application {
     @RequestMapping("/")
     public String index(Model model) {
         List<String> list = stockService.getAllIntruduce();
-        model.addAttribute("industry", list);
+        //2019-5-8 12:45:11 测试
+        if(list.size()>=1){
+            model.addAttribute("industry", list);
+        }else {
+            list.add("stockService出错");
+            model.addAttribute("industry", list);
+        }
         return "index";
     }
 

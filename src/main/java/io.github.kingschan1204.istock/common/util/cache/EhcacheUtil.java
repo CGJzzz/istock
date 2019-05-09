@@ -64,7 +64,4 @@ public class EhcacheUtil {
         return null==cache?0:cache.getKeys().size();
     }
 
-
-
-
 }

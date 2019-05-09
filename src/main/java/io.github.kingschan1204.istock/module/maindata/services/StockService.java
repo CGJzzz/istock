@@ -336,7 +336,7 @@ public class StockService {
     }
 
     /**
-     * 获取所有行业
+     * 从stock_code_info.industry统计所有行业
      *
      * @return
      */

@@ -48,4 +48,3 @@ timeToLiveSeconds=180；
     <cache name="TradingDate" eternal="true" maxElementsInMemory="1000" overflowToDisk="false" diskPersistent="false"  memoryStoreEvictionPolicy="LFU" />
 
 </ehcache>
-

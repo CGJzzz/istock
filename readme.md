@@ -87,7 +87,7 @@ spring.security.user.password=
 ![](https://user-images.githubusercontent.com/4113891/41651992-8b2020c6-74b4-11e8-86f0-c87c167f7ef0.png )
 
 ## tushare token 获取方法
-- 1.[点击这个链接注册帐号](https://tushare.pro/register?reg=133400)
+- 1.[点击这个链接注册帐号](https://tushare.pro/register?reg=264648)
 - 2.然后https://tushare.pro/user/token   在这个页面可以拿到token
 - 3.把token复制到application.properties 
 ![微信截图_20190409152849](https://user-images.githubusercontent.com/4113891/55781105-f8cc7f80-5adb-11e9-83d0-b191fddea24a.png)

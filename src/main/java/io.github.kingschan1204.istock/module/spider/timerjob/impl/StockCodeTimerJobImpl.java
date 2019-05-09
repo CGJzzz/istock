@@ -5,6 +5,7 @@ import io.github.kingschan1204.istock.module.maindata.services.StockCodeInfoServ
 import io.github.kingschan1204.istock.module.maindata.services.StockCompanyService;
 import io.github.kingschan1204.istock.module.spider.timerjob.ITimerJob;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 /**
  * 0点要执行的代码刷新工作

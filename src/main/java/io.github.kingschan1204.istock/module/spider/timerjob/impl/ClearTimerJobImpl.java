@@ -6,6 +6,7 @@ import io.github.kingschan1204.istock.module.maindata.po.StockReport;
 import io.github.kingschan1204.istock.module.spider.timerjob.ITimerJob;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.Arrays;

@@ -3,6 +3,7 @@ package io.github.kingschan1204.istock.module.spider.timerjob.impl;
 import io.github.kingschan1204.istock.module.spider.crawl.info.InfoCrawlJob;
 import io.github.kingschan1204.istock.module.spider.timerjob.ITimerJob;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 /**
  * 代码info信息更新命令封装

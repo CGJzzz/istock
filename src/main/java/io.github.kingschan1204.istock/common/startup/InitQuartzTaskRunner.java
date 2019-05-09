@@ -1,7 +1,9 @@
 package io.github.kingschan1204.istock.common.startup;
 
 import io.github.kingschan1204.istock.common.util.quartz.QuartzManager;
-import io.github.kingschan1204.istock.module.task.*;
+import io.github.kingschan1204.istock.module.task.StockDividendTask;
+import io.github.kingschan1204.istock.module.task.ThsHisYearReportTask;
+import io.github.kingschan1204.istock.module.task.XueQiuStockDyTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

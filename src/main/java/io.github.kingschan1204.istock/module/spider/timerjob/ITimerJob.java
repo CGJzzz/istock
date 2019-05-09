@@ -1,5 +1,7 @@
 package io.github.kingschan1204.istock.module.spider.timerjob;
 
+import org.springframework.stereotype.Repository;
+
 /**
  * 1天只需要执行一次的定时任务
  * timer job interface
