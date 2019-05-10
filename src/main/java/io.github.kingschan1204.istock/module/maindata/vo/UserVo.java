@@ -16,6 +16,25 @@ public class UserVo {
     private Long soldDate;//售出日期
     private Long shareNumber;//股票数量
     private BigDecimal accountBalance;//账户余额
+    private String account;
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    private String password;
 
     public UserVo() {
     }

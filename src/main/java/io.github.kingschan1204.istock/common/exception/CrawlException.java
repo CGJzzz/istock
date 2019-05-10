@@ -5,7 +5,7 @@ package io.github.kingschan1204.istock.common.exception;
  * @author chenguoxiang
  * @create 2018-11-13 16:20
  **/
-public class CrawlException extends RuntimeException {
+public class  CrawlException extends RuntimeException {
 
     public CrawlException(){
         super();

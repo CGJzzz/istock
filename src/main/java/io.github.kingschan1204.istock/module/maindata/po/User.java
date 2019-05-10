@@ -20,4 +20,6 @@ public class User {
     private Long soldDate;//售出日期
     private Long shareNumber;//股票数量
     private BigDecimal accountBalance;//账户余额
+    private String account;
+    private String password;
 }

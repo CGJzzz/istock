@@ -25,21 +25,10 @@ import java.util.List;
 @ServletComponentScan
 @SpringBootApplication
 public class Application {
-    /*
-    2019-5-9 16:59:17
-    在原来的基础上加入强制登录功能
-     */
-    @Autowired
-    private UserService userService;
+
 
     @Autowired
     private StockService stockService;
-
-
-    @RequestMapping("/temp")
-    public String login(){
-        return "login";
-    }
 
     @RequestMapping("/")
     public String index(Model model) {
