@@ -34,11 +34,21 @@ public class UserService {
             return null;
         }
     }
-
-    public void addUser(String accountName,String password){
-        User user =new User();
-        user.setAccount(accountName);
-        user.setPassword(password);
-        template.save(user);
+    //添加用户功能,不允许重复accountName->account(数据库属性)
+    public boolean addUser(String accountName,String password){
+//        测试连接成功
+        Query query=new Query();
+//        query.addCriteria(Criteria.where("account").is(accountName).and("password").is(password));
+        query.addCriteria(Criteria.where("account").is(accountName));
+        List<User> list=template.find(query,User.class);
+        if(list.size()==0){
+            User user =new User();
+            user.setAccount(accountName);
+            user.setPassword(password);
+            template.save(user);
+            return true;
+        }else{
+            return false;
+        }
     }
 }

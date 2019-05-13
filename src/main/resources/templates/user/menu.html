@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>安信股票交易系统</title>
+</head>
+<style>
+    *{padding: 0;margin: 0;}  /* 先重置一下html，消除HTML标签默认的内外边距 */
+    .wrap{width: 1915px;margin: 0 auto;}    /* 对导航的内容设置一个主体为1915px的宽并使其居中 */
+    .clear{clear: both;}  /* 清除浮动 */
+    a{text-decoration-line: none;}   /* 去掉默认a标签的下划线 */
+    ul,li{list-style: none;}
+    nav .level>li{float: left;width: 16.66%;text-align: center;background: black;padding: 10px 0;font-size: 16px;transition: .4s;}
+    nav .level>li a{color: white;}
+    nav .level>li:hover{background:black;}   /* 设置鼠标滑过后的样式 */
+ 
+    nav .two{display: none;margin-top: 10px;}  /* 先使二级菜单的内容隐藏 */
+    nav .level>li:hover .two{display: block;color: white;}   /* 鼠标滑过一级菜单后的显示二级菜单 */
+    nav .two li{padding: 5px 0;transition: .4s;cursor: pointer;}
+    nav .two li:hover{background:white;}
+    nav .two li:hover{background: grey;}
+</style>
+<body>
+    <nav>
+        <div class="wrap">
+            <ul class="level">
+                <li><a href="">首页</a></li>
+                <li>
+                    <a href="">关于</a>
+                    <ul class="two">
+                        <li>二级菜单1</li>
+                        <li>二级菜单2</li>
+                        <li>二级菜单3</li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="">消息</a>
+                    <ul class="two">
+                        <li>二级菜单4</li>
+                        <li>二级菜单5</li>
+                        <li>二级菜单6</li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="D:/Desktop/网页/login.html">登录</a>
+                    <!--<ul class="two">
+                        <li></li>
+                        <li>快速注册</li>
+                        <li></li>
+                    </ul>-->
+                </li>
+               <li>
+                    <a href="">退出</a>
+                    <!--<ul class="two">
+                        <li>二级菜单10</li>
+                        <li>二级菜单11</li>
+                        <li>二级菜单12</li>
+                    </ul>-->
+                </li>
+				 <li>
+                    <a href="">个人中心</a>
+                    <ul class="two">
+                        <li>二级菜单10</li>
+                        <li>二级菜单11</li>
+                        <li>二级菜单12</li>
+                    </ul>
+                </li>
+                 
+            </ul>
+        </div>
+    </nav>
+</body>
+</html>

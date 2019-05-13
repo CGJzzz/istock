@@ -3,10 +3,12 @@ package module.maindata.services;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import io.github.kingschan1204.istock.module.maindata.po.User;
 import io.github.kingschan1204.istock.module.maindata.services.UserService;
 import org.bson.Document;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,9 @@ import static org.junit.Assert.*;
 public class UserServiceTest {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Test
     public void queryUserByLogin() {
@@ -51,5 +56,13 @@ public class UserServiceTest {
         }catch(Exception e){
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
+    }
+
+    @Test
+    public void test(){
+        User user = new User();
+        user.setAccount("asdsadsadsa");
+        user.setPassword("sdasdsa sa34 3 32 32 f");
+        mongoTemplate.insert(user, "user");
     }
 }
