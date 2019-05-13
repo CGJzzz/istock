@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -45,6 +46,7 @@ public class UserService {
             User user =new User();
             user.setAccount(accountName);
             user.setPassword(password);
+            user.setBalance((double) 0);
             template.save(user);
             return true;
         }else{

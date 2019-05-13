@@ -39,6 +39,7 @@ public class UserCtl {
 
         //设置状态码部分,以下为测试部分
         JSONObject jsonObject=new JSONObject();
+        System.out.println(accountName);
 //        response.setStatus(200);//设置response headers http状态码为200
 //        return new ResponseEntity(HttpStatus.CONFLICT);
 //        jsonObject.put("code",200);//设置login页面状态码,自定义 --配合ajax
@@ -47,12 +48,14 @@ public class UserCtl {
         HttpSession session=request.getSession();
         User user = userService.queryUserByLogin(accountName,password);
         if(user!=null){
-            session.setAttribute("accountName",accountName);
+            session.setAttribute("account",accountName);
+            session.setAttribute("balance",user.getBalance());
             jsonObject.put("code",200);//设置login页面状态码,自定义
         }else {
             //401 Unauthorized - [*]：表示用户没有权限（令牌、用户名、密码错误）。
+            session.setAttribute("account",null);
+            session.setAttribute("balance",0d);
             jsonObject.put("code",401);
-            session.setAttribute("accountName",null);
         }
         //设置用户信息查询部分
         return jsonObject;

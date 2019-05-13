@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -37,10 +38,6 @@ public class Application {
     public String index(Model model, HttpServletRequest request) {
         List<String> list = stockService.getAllIntruduce();
         HttpSession session=request.getSession();
-        String accountName= (String) session.getAttribute("account");
-        if(accountName!=null){
-            model.addAttribute("accountName",accountName);
-        }
         //2019-5-8 12:45:11 测试
         if(list.size()>=1){
             model.addAttribute("industry", list);

@@ -86,7 +86,7 @@
                     </ul>
                 </div>
                 <button><a href="/userLogin">登录</a> </button>
-                <textarea> 用户名: ${accountName}</textarea>
+                <textarea> 用户名:${account!} , 余额:${balance!}</textarea>
             </form>
         </div>
     </div>
@@ -120,7 +120,7 @@
                     '5年平均股息','最新ROE','5年平均ROE', '上次分红', '行业','数量','购买','售出'],
                 colModel: [
 
-                    {label: 'code', name: 'code', width: 70},
+                    {label: 'code', name: 'code', width: 100},
                     {label: 'name', name: 'name', width: 110},
                     {label: 'type', name: 'type', width: 40},
                     {label: 'price', name: 'price', width: 50, align: 'right'},
