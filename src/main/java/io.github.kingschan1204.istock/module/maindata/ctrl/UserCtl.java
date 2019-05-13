@@ -72,4 +72,13 @@ public class UserCtl {
         return jsonObject;
     }
 
+    @RequestMapping("buy")
+    public String buy(){
+        return "user/buy";
+    }
+
+    @RequestMapping("sell")
+    public String sell(){
+        return "user/sell";
+    }
 }
