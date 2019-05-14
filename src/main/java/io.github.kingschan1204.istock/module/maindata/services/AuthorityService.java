@@ -18,4 +18,9 @@ public class AuthorityService {
     public void addAuthority( Authority authority){
         template.save(authority);
     }
+    public void add(){
+        Authority a=new Authority();
+        a.setCode("000001");
+        template.save(a);
+    }
 }

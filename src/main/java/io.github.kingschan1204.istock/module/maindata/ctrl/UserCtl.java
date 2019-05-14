@@ -74,16 +74,16 @@ public class UserCtl {
 
     @RequestMapping("authorize")
     @ResponseBody
-    public String AskAuthorize(@RequestParam String account,
-                               @RequestParam LocalDateTime dateTime,
-                               @RequestParam String code,
-                               @RequestParam Long num,
-                               @RequestParam Double priceOrder,
-                               @RequestParam String behavior,
+    public String AskAuthorize(@RequestParam(required = true) String account,
+                               @RequestParam(required = true) String dateTime,
+                               @RequestParam(required = true) String code,
+                               @RequestParam(required = true) Long num,
+                               @RequestParam(required = true) Double priceOrder,
+                               @RequestParam(required = true) String behavior,
                                @Autowired Authority authority){
         authority.setAccount(account);
         authority.setCode(code);
-        authority.setDate(dateTime.toString());
+        authority.setDate(dateTime);
         authority.setNumberOfShare(num);
         authority.setPriceOrder(priceOrder);
         authority.setBehavior(behavior);
@@ -92,7 +92,10 @@ public class UserCtl {
     }
 
     @RequestMapping("sell")
-    public String sell(){
+    public String sell(@Autowired Authority authority){
+        authority.setCode("000002");
+        authorityService.addAuthority(authority);
+        authorityService.add();
         return "user/sell";
     }
 
