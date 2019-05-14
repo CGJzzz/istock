@@ -2,28 +2,28 @@ package io.github.kingschan1204.istock.module.maindata.ctrl;
 
 
 import com.alibaba.fastjson.JSONObject;
+import io.github.kingschan1204.istock.module.maindata.po.Authority;
 import io.github.kingschan1204.istock.module.maindata.po.User;
+import io.github.kingschan1204.istock.module.maindata.services.AuthorityService;
 import io.github.kingschan1204.istock.module.maindata.services.UserService;
-import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonObjectDeserializer;
-import org.springframework.boot.web.servlet.server.Session;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
-import sun.awt.geom.AreaOp;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 
 @Controller
 public class UserCtl {
     @Autowired
     private UserService userService;
+    @Autowired
+    private AuthorityService authorityService;
 
     @RequestMapping("/userLogin")
     public String login(){
@@ -72,13 +72,28 @@ public class UserCtl {
         return jsonObject;
     }
 
-    @RequestMapping("buy")
-    public String buy(){
-        return "user/buy";
+    @RequestMapping("authorize")
+    @ResponseBody
+    public String AskAuthorize(@RequestParam String account,
+                               @RequestParam LocalDateTime dateTime,
+                               @RequestParam String code,
+                               @RequestParam Long num,
+                               @RequestParam Double priceOrder,
+                               @RequestParam String behavior,
+                               @Autowired Authority authority){
+        authority.setAccount(account);
+        authority.setCode(code);
+        authority.setDate(dateTime.toString());
+        authority.setNumberOfShare(num);
+        authority.setPriceOrder(priceOrder);
+        authority.setBehavior(behavior);
+        authorityService.addAuthority(authority);
+        return "受理";
     }
 
     @RequestMapping("sell")
     public String sell(){
         return "user/sell";
     }
+
 }
