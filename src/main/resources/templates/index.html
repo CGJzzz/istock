@@ -268,22 +268,5 @@
         var rowData = $("#jqGrid").jqGrid('getRowData', ids);
         window.open("/stock/info/" + rowData.code);
     });
-
-    // 2019-5-9 14:11:11 by cgj
-    function cmgBuyFormat(grid, rows,buy) {
-        var shareCount=1;
-        if(shareCount>0){
-            return "<button class='btn btn-primary ' onclick=\"change()\">买入</button>" ;
-        }else{
-            return "<button class='btn btn-warning ' onclick=\"change()\">暂停</button>" ; }
-    }
-    function change() {
-    }
-    function cmgSellFormat() {
-        var shareCount=0;
-        if(shareCount>0){
-            return "<button class='btn btn-primary ' onclick=\"change()\">售出</button>" ; }else{
-            return "<button class='btn btn-warning ' onclick=\"change()\">暂停</button>" ; }
-    }
 </script>
 </#compress>
