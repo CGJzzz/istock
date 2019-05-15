@@ -2,7 +2,7 @@ package io.github.kingschan1204.istock.module.maindata.vo;
 
 public class AuthorityVo {
     private String id;
-
+    private String AuthorityOrderSerial;//委托订单号
     private String account;
 
     //日期
@@ -20,6 +20,14 @@ public class AuthorityVo {
     private Double priceTotal;
     //买入in 卖出out
     private String behavior;
+
+    public String getAuthorityOrderSerial() {
+        return AuthorityOrderSerial;
+    }
+
+    public void setAuthorityOrderSerial(String authorityOrderSerial) {
+        AuthorityOrderSerial = authorityOrderSerial;
+    }
 
     public String getDate() {
         return date;

@@ -40,6 +40,7 @@ public class StockInfoCtl {
         model.addAttribute("pagetitle",String.format("%s-%s",code,stockVo.getName()));
         model.addAttribute("data",json.toJSONString());
         model.addAttribute("stock", JSON.toJSONString(stockVo));
+        model.addAttribute("stockprice",stockVo.getPrice());
 
         //统一时间
         String orderDate= DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
@@ -72,8 +73,13 @@ public class StockInfoCtl {
             authority.setStatus("receive");
             authority.setPriceFinal(0.0d);
             authority.setPriceFinal(0.0d);
+
+            //委托订单号
+            String authorityOrderSerial=orderDate+account+code;
+            authority.setAuthorityOrderSerial(authorityOrderSerial);
             authorityService.addAuthority(authority);
             jsonObject.put("code",200);//设置login页面状态码,自定义
+            jsonObject.put("authorityOrderSerial",authorityOrderSerial);
         }else {
             jsonObject.put("code",401);
         }

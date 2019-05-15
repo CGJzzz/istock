@@ -148,8 +148,17 @@
         <div class="col-md-2 info-title">公司介绍</div>
         <div class="col-md-10">{{info.company[0].introduction}}</div>
     </div>
-    <div class="container">
-        <table style="width: 800px;margin:0 auto;" class="table table-striped table-hover table-bordered" >
+    <div class="row">
+
+        <div class="col-md-2"></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-1"></div>
+        <div class="col-md-1"></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-1"></div>
+        <div class="col-md-2"></div>
+        <table style="width: 1140px;margin:0 auto;text-align:center;" class="table table-striped table-hover table-bordered">
             <thead>
             <tr>
                 <th>委托者</th>
@@ -160,25 +169,33 @@
                 <th>价格(/股)</th>
                 <th>数量（股>=100）</th>
                 <th>总价格</th>
-                <th>操作（买入/卖出）</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
             <tr>
                 <td>${account!}</td>
                 <td>${orderDate!}</td>
-                <td>{{info._id}}</td>
+                <td>{{info._id}}<br>{{stock.name}}</td>
                 <td>{{stock.name}}</td>
                 <td>是</td>
                 <td>{{stock.price}}</td>
-                <td><input type="text" placeholder="请输入数量" id="box_name" class="txt" value="数量" onfocus="this.value=''" onblur="if(this.value=='')this.value='数量'"/></td>
-                <td></td>
-                <td></td>
+                <td>
+                    <input type="text" placeholder="请输入数量" id="number" class="txt" onblur="" onmouseout="mouseOut()" autocomplete="off"/>
+                </td>
+                <td id="result"></td>
+                <td>
+                    <select class="form-control" id="selectId">
+                        <option value="in">买入</option>
+                        <option value="out">卖出</option>
+                    </select>
+                </td>
             </tr>
 
             </tbody>
         </table>
     </div>
+    <div class="media-middle"><button onClick="check()">确认</button></div>
 
 </div>
 </body>
@@ -218,6 +235,98 @@
                 return "<span style='color:green;'>"+value+"</span>";
 
             }
+        }
+    });
+
+    function beforeSubmit1(form1){
+
+        var result=document.getElementById('result');
+        var number=document.getElementById('number');
+        console.log(result);
+        console.log(number);
+        return true;
+        if(form1.number.value==''){
+            alert('数量不能为空！');
+            form1.number.focus();
+            return false;
+        }
+        if(form1.number.value %100!=0){
+            alert('数量必须为100的倍数！');
+            form1.number.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    function mouseOut(){
+        var valueOfNum=document.getElementById("number").value;
+        console.log(valueOfNum);
+        var result=document.getElementById("result");
+        var price=${stockprice};
+        result.innerHTML=valueOfNum*price;
+    }
+
+    function check(form){
+        var num = document.getElementById("number").value;
+        var price=${stockprice};
+        var behavior=$("#selectId").val();
+        console.log(behavior);
+
+        var url="/stock/authorize/";
+        if(!num || num == ""){
+            showMsg("请输入数量");
+            form.number.focus();
+            return false;
+        }
+//这里为用ajax获取用户信息并进行验证，如果账户密码不匹配则登录失败，如不需要验证用户信息，这段可不写
+        $.ajax({
+            url : "/stock/authorize/${code}",// 获取自己系统后台用户信息接口
+            data :{"num":num,"priceOrder":price,"behavior":behavior},
+            type : "post",
+            dataType: "json",
+            success : function(data) {
+                if (data){
+                    console.log(data)
+                    if (data.code == "200") { //判断返回值，这里根据的业务内容可做调整
+                        // setTimeout(function () {//做延时以便显示登录状态值
+                        //     showMsg("正在登录中...");
+                        //     console.log(data);
+                        //     window.location.href =  "/";//指向登录的页面地址
+                        // },10)
+                        console.log(data);
+                        console.log(data.authorityOrderSerial);
+                        alert("成功委托订单"+(data.authorityOrderSerial));
+                        window.location.href =  "/";//指向登录的页面地址
+                    } else {
+                        showMsg(data.message);//显示登录失败的原因
+                        return false;
+                    }
+                }
+            },
+            error : function(data){
+                showMsg(data.message);
+            }
+        });
+    }
+
+    //错误信息提醒
+    function showMsg(msg){
+        $("#CheckMsg").text(msg);
+    }
+
+    //监听回车键提交
+    $(function(){
+        document.onkeydown=keyDownSearch;
+        function keyDownSearch(e) {
+            // 兼容FF和IE和Opera
+            var theEvent = e || window.event;
+            var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+            if (code == 13) {
+                $('#submit').click();//具体处理函数
+                return false;
+            }
+            return true;
         }
     });
 </script>

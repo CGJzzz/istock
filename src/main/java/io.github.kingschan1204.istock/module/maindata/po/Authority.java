@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Authority {
     @Id
     private String id;
+    private String AuthorityOrderSerial;//委托订单号
 
     private String account;
 
