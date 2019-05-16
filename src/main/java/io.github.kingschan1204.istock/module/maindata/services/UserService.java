@@ -53,4 +53,27 @@ public class UserService {
             return false;
         }
     }
+
+    //进入用户委托界面,下单之前默认用户已经登录了,如果没有登录会跳转到登录界面,
+    //此方法仅用于登录后查询用户
+    public User queryUserAfterLogin(String account){
+        Query query=new Query();
+        query.addCriteria(Criteria.where("account").is(account));
+        List<User> list=template.find(query,User.class);
+        if (list.size()==1){
+            User user=list.get(0);
+            return user;
+        }else {
+            return null;
+        }
+    }
+
+    public boolean saveUser(User user){
+        if(user!=null){
+            template.save(user);
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

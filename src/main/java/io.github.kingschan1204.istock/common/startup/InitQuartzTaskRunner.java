@@ -1,6 +1,7 @@
 package io.github.kingschan1204.istock.common.startup;
 
 import io.github.kingschan1204.istock.common.util.quartz.QuartzManager;
+import io.github.kingschan1204.istock.module.task.AuthorityCalculateTask;
 import io.github.kingschan1204.istock.module.task.StockDividendTask;
 import io.github.kingschan1204.istock.module.task.ThsHisYearReportTask;
 import io.github.kingschan1204.istock.module.task.XueQiuStockDyTask;
@@ -45,6 +46,13 @@ public class InitQuartzTaskRunner implements ApplicationRunner, Ordered {
                 "xueqiuDyTask-trigger-group",
                 XueQiuStockDyTask.class,
                 "0 0/1 * * * ?");
+
+        quartzManager.addJob("authorityCalculateTask",
+                "authorityCalculateTask-group",
+                "authorityCalculateTask-trigger",
+                "authorityCalculateTask-trigger-group",
+                AuthorityCalculateTask.class,
+                "0/3 * * * * ?");
 
 
     }

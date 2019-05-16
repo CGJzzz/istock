@@ -181,7 +181,7 @@
                 <td>是</td>
                 <td>{{stock.price}}</td>
                 <td>
-                    <input type="text" placeholder="请输入数量" id="number" class="txt" onblur="" onmouseout="mouseOut()" autocomplete="off"/>
+                    <input type="text" placeholder="请输入数量" id="number" class="txt" onblur="" onchange="mouseOut()" autocomplete="off"/>
                 </td>
                 <td id="result"></td>
                 <td>
@@ -264,7 +264,7 @@
         console.log(valueOfNum);
         var result=document.getElementById("result");
         var price=${stockprice};
-        result.innerHTML=valueOfNum*price;
+        result.innerHTML=valueOfNum*price.toFixed(2);
     }
 
     function check(form){
@@ -281,7 +281,7 @@
         }
 //这里为用ajax获取用户信息并进行验证，如果账户密码不匹配则登录失败，如不需要验证用户信息，这段可不写
         $.ajax({
-            url : "/stock/authorize/${code}",// 获取自己系统后台用户信息接口
+            url : "/stock/authorize/"+behavior+"/${code}",// 获取自己系统后台用户信息接口
             data :{"num":num,"priceOrder":price,"behavior":behavior},
             type : "post",
             dataType: "json",
@@ -299,6 +299,7 @@
                         alert("成功委托订单"+(data.authorityOrderSerial));
                         window.location.href =  "/";//指向登录的页面地址
                     } else {
+                        alert(data.tips);
                         showMsg(data.message);//显示登录失败的原因
                         return false;
                     }
