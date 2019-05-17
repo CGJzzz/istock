@@ -38,4 +38,16 @@ public class ShareHoldingService {
         List<ShareHolding> list = template.find(query, ShareHolding.class);
         return list;
     }
+
+    public void save(ShareHolding shareHolding){
+        if(shareHolding!=null){
+            template.save(shareHolding);
+        }
+    }
+
+    public void insert(ShareHolding shareHolding){
+        if(shareHolding!=null){
+            template.insert(shareHolding);
+        }
+    }
 }

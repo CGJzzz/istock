@@ -1,9 +1,11 @@
 package io.github.kingschan1204.istock.module.task;
 
 import io.github.kingschan1204.istock.module.maindata.po.Authority;
+import io.github.kingschan1204.istock.module.maindata.po.ShareHolding;
 import io.github.kingschan1204.istock.module.maindata.po.User;
 import io.github.kingschan1204.istock.module.maindata.repository.AuthorityRepository;
 import io.github.kingschan1204.istock.module.maindata.services.AuthorityService;
+import io.github.kingschan1204.istock.module.maindata.services.ShareHoldingService;
 import io.github.kingschan1204.istock.module.maindata.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
@@ -28,6 +30,8 @@ public class AuthorityCalculateTask implements Job {
     private UserService userService;
     @Autowired
     private AuthorityService authorityService;
+    @Autowired
+    private ShareHoldingService shareHoldingService;
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -53,7 +57,9 @@ public class AuthorityCalculateTask implements Job {
         if (listOut.size() > 0 && listIn.size() > 0) {
             for (Authority authorityIn : listIn) {
                 for (Authority authorityOut : listOut) {
-                    if (authorityIn.getCode().equals(authorityOut.getCode())) {
+                    if (authorityIn.getCode().equals(authorityOut.getCode())
+                            &&authorityIn.getStatus().equals("receive")
+                            &&authorityOut.getStatus().equals("receive")) {
 
                         //限价只考虑买入比自己出价低的股份 getPriceOrder->下单时的价格
                         if (authorityIn.getPriceOrder() >= authorityOut.getPriceOrder()) {
@@ -63,11 +69,13 @@ public class AuthorityCalculateTask implements Job {
                             //先找出买卖双方的User账号->需要更改余额
                             Query queryInUser = new Query();
                             queryInUser.addCriteria(Criteria.where("account").is(authorityIn.getAccount()));
-                            List<User> listInUser = mongoTemplate.find(queryIn, User.class);
+                            List<User> listInUser = mongoTemplate.find(queryInUser, User.class);
+                            System.out.println("此时买方账号是"+listInUser.get(0));
 
                             Query queryOutUser = new Query();
                             queryOutUser.addCriteria(Criteria.where("account").is(authorityOut.getAccount()));
-                            List<User> listOutUser = mongoTemplate.find(queryIn, User.class);
+                            List<User> listOutUser = mongoTemplate.find(queryOutUser, User.class);
+                            System.out.println("此时卖方账号是"+listOutUser.get(0));
 
                             if (listInUser.size() == 1 && listOutUser.size() == 1) {
                                 User userIn = listInUser.get(0);
@@ -88,10 +96,31 @@ public class AuthorityCalculateTask implements Job {
                                     authorityService.save(authorityOut);
                                     userService.saveUser(userIn);
                                     userService.saveUser(userOut);
+
+                                    //更新持仓数据
+                                    List<ShareHolding> listOfIn=shareHoldingService.searchSpecificCode(authorityIn.getAccount(),
+                                            authorityIn.getCode());
+                                    ShareHolding shareHoldingIn;
+                                    if(listOfIn.size()==1){
+                                        shareHoldingIn=listOfIn.get(0);
+                                        shareHoldingIn.setNumber(shareHoldingIn.getNumber()+numOut);
+                                        shareHoldingService.save(shareHoldingIn);
+                                    }else {
+                                        shareHoldingIn =new ShareHolding();
+                                        shareHoldingIn.setNumber(numOut);
+                                        shareHoldingIn.setAccount(authorityIn.getAccount());
+                                        shareHoldingIn.setCode(authorityIn.getCode());
+                                        shareHoldingService.insert(shareHoldingIn);
+                                    }
+                                    //更新卖方持仓
+                                    ShareHolding shareHoldingOut=shareHoldingService.searchSpecificCode(authorityOut.getAccount(),
+                                            authorityOut.getCode()).get(0);
+                                    shareHoldingOut.setNumber(shareHoldingOut.getNumber()-numOut);
+                                    shareHoldingService.save(shareHoldingOut);
                                 } else {
                                     authorityIn.setStatus("done");
                                     authorityIn.setNumberOfShare(0L);
-                                    authorityOut.setNumberOfShare(numIn - numOut);
+                                    authorityOut.setNumberOfShare(numOut - numIn);
                                     //更新买方余额
                                     userIn.setBalance(userIn.getBalance() - numIn * authorityOut.getPriceOrder());
                                     //更新卖方余额
@@ -100,6 +129,26 @@ public class AuthorityCalculateTask implements Job {
                                     authorityService.save(authorityOut);
                                     userService.saveUser(userIn);
                                     userService.saveUser(userOut);
+
+                                    ShareHolding shareHoldingIn;
+                                    List<ShareHolding> listOfIn =shareHoldingService.searchSpecificCode(authorityIn.getAccount(),
+                                            authorityIn.getCode());
+                                    if(listOfIn.size()==1){
+                                        shareHoldingIn=listOfIn.get(0);
+                                        shareHoldingIn.setNumber(shareHoldingIn.getNumber()+numIn);
+                                        shareHoldingService.save(shareHoldingIn);
+                                    }else {
+                                        shareHoldingIn=new ShareHolding();
+                                        shareHoldingIn.setAccount(authorityIn.getAccount());
+                                        shareHoldingIn.setCode(authorityIn.getCode());
+                                        shareHoldingIn.setNumber(numIn);
+                                        shareHoldingService.insert(shareHoldingIn);
+                                    }
+
+                                    ShareHolding shareHoldingOut=shareHoldingService.searchSpecificCode(authorityOut.getAccount(),
+                                            authorityOut.getCode()).get(0);
+                                    shareHoldingOut.setNumber(shareHoldingOut.getNumber()-numIn);
+                                    shareHoldingService.save(shareHoldingOut);
                                 }
                             }
                         }
