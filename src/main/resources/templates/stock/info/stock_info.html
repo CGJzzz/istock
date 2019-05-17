@@ -149,6 +149,12 @@
         <div class="col-md-10">{{info.company[0].introduction}}</div>
     </div>
     <div class="row">
+        <div class="col-md-2 info-title">用户持仓</div>
+        <#list infoList as text>
+        <div value="${text}">${text}</div>
+        </#list>
+    </div>
+    <div class="row">
 
         <div class="col-md-2"></div>
         <div class="col-md-2"></div>

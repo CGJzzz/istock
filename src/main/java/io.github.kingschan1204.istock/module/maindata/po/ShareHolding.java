@@ -12,6 +12,6 @@ public class ShareHolding {
     private String account;
     private String code;
     private String nameOfShare;
-    private Double number;
+    private Long number;
     private Double priceFirst;
 }

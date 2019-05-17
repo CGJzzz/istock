@@ -5,7 +5,7 @@ public class ShareHoldingVo {
     private String account;
     private String code;
     private String nameOfShare;
-    private Double number;
+    private Long number;
     private Double priceFirst;
 
     public ShareHoldingVo() {
@@ -43,11 +43,11 @@ public class ShareHoldingVo {
         this.nameOfShare = nameOfShare;
     }
 
-    public Double getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(Double number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 

@@ -52,7 +52,9 @@ public class InitQuartzTaskRunner implements ApplicationRunner, Ordered {
                 "authorityCalculateTask-trigger",
                 "authorityCalculateTask-trigger-group",
                 AuthorityCalculateTask.class,
-                "0/3 * * * * ?");
+                "* 0/1 * * * ?");
+
+//                "0/3 * * * * ?");
 
 
     }

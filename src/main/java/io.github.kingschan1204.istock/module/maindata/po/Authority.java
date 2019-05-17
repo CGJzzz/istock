@@ -10,13 +10,12 @@ public class Authority {
     @Id
     private String id;
     private String AuthorityOrderSerial;//委托订单号
-
     private String account;
 
     //日期
-    private String date;
 
     private String code;
+    private String date;
     private Long numberOfShare;
     //是否成交
     private String status;
