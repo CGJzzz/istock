@@ -1,8 +1,7 @@
-package io.github.kingschan1204.istock.module.maindata.ctrl;
+package io.github.kingschan1204.istock.module.maindata.ctrl.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.sym.NameN;
 import io.github.kingschan1204.istock.module.maindata.po.Authority;
 import io.github.kingschan1204.istock.module.maindata.po.ShareHolding;
 import io.github.kingschan1204.istock.module.maindata.po.User;
@@ -11,6 +10,10 @@ import io.github.kingschan1204.istock.module.maindata.services.ShareHoldingServi
 import io.github.kingschan1204.istock.module.maindata.services.StockInfoService;
 import io.github.kingschan1204.istock.module.maindata.services.UserService;
 import io.github.kingschan1204.istock.module.maindata.vo.StockVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +25,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.List;
 
 /**
  * @author chenguoxiang
  * @create 2018-11-02 15:49
  **/
+@Api(description = "股票信息类")
 @Controller
 public class StockInfoCtl {
     private Logger log = LoggerFactory.getLogger(StockInfoCtl.class);
@@ -41,7 +44,8 @@ public class StockInfoCtl {
     @Autowired
     private ShareHoldingService shareHoldingService;
 
-    @RequestMapping("/stock/info/{code}")
+    @ApiOperation(value = "股票信息", notes = "根据传入股票代码参数返回列表信息")
+    @GetMapping("/stock/info/{code}")
     public String stockInfo(@PathVariable String code, Model model,
                             HttpServletRequest request) {
         JSONObject json = stockInfoService.getStockInfo(code);
@@ -63,7 +67,8 @@ public class StockInfoCtl {
 
     //买入委托函数
     //逻辑 用户下单-扣钱成功-receive用户委托,quartz实现差额补全
-    @RequestMapping(value = "/stock/authorize/in/{code}")
+    @ApiOperation(value = "委托买入", notes = "未实行前后端分离,需要用户先登录后才能使用委托买入卖出功能")
+    @PostMapping(value = "/stock/authorize/in/{code}")
     @ResponseBody
     public JSONObject receiveInAnthority(@PathVariable String code,
                                          @RequestParam(required = true) Long num,
@@ -119,8 +124,8 @@ public class StockInfoCtl {
         }
 
     }
-
-    @RequestMapping(value = "/stock/authorize/out/{code}")
+    @ApiOperation(value = "委托卖出", notes = "未实行前后端分离,需要用户先登录后才能使用委托买入卖出功能")
+    @PostMapping(value = "/stock/authorize/out/{code}")
     @ResponseBody
     public JSONObject receiveOutAuthority(@PathVariable String code,
                                           @RequestParam(required = true) Long num,
@@ -191,12 +196,5 @@ public class StockInfoCtl {
             jsonObject.put("tips", "请登录");
             return jsonObject;
         }
-    }
-
-    @RequestMapping("/testSer")
-    @ResponseBody
-    public List<Authority> test(String account,String code){
-        List<Authority> list=authorityService.searchByAccountCodeBehaviro(account,code,"out");
-        return list;
     }
 }

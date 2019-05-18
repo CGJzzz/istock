@@ -46,14 +46,14 @@ public class SwaggerConfig {
 
 
     private ApiInfo openApiInfo() {
-        return createApiInfo("istock在线接口文档(开放文档)", "简单优雅的restfun风格");
+        return createApiInfo("istock在线接口文档(开放文档)", "基于开源项目https://github.com/kingschan1204/istock进行二次开发");
     }
 
     private ApiInfo createApiInfo(String title, String description) {
         return new ApiInfoBuilder()
             .title(title)
             .description(description)
-            .contact(new Contact("点链接给我发邮件", "", "kings.chan@qq.com"))
+            .contact(new Contact("->有bug点链接给我发邮件", "", "931418509@qq.com"))
             .version(version)
 //            .licenseUrl("/admin/swagger-ui.html")
 //            .termsOfServiceUrl("/admin/swagger-ui.html")
