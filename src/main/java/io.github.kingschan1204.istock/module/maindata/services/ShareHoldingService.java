@@ -1,7 +1,6 @@
 package io.github.kingschan1204.istock.module.maindata.services;
 
 import io.github.kingschan1204.istock.module.maindata.po.ShareHolding;
-import io.github.kingschan1204.istock.module.maindata.po.StockDividend;
 import io.github.kingschan1204.istock.module.maindata.repository.ShareHoldingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -34,7 +33,7 @@ public class ShareHoldingService {
     //供服务器查询用户特点股票持有量
     public List<ShareHolding> searchSpecificCode(String account,String code){
         Query query = new Query();
-        query.addCriteria(Criteria.where("account").is(account));
+        query.addCriteria(Criteria.where("account").is(account).and("code").is(code));
         List<ShareHolding> list = template.find(query, ShareHolding.class);
         return list;
     }

@@ -11,8 +11,6 @@ import io.github.kingschan1204.istock.module.maindata.services.StockInfoService;
 import io.github.kingschan1204.istock.module.maindata.services.UserService;
 import io.github.kingschan1204.istock.module.maindata.vo.StockVo;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,11 +147,11 @@ public class StockInfoCtl {
                     for(ShareHolding shareHolding:list){
                         //先去持仓查询股票code特有的数量;
                         total+=shareHolding.getNumber();
-                        //根据委托 减去委托卖出的数量->得到的当前数量,根据这个数才可以继续计算.
-                        List<Authority> listOfAuthority=authorityService.searchByAccountCodeBehaviro(account,code,"out");
-                        for (Authority a:listOfAuthority){
-                            total-=a.getNumberOfShare();
-                        }
+                    }
+                    //根据委托 减去委托卖出的数量->得到的当前数量,根据这个数才可以继续计算.
+                    List<Authority> listOfAuthority=authorityService.searchByAccountCodeBehaviro(account,code,"out");
+                    for (Authority a:listOfAuthority){
+                        total-=a.getNumberOfShare();
                     }
                     if(Long.compare(total,num)>=0){
                         authority.setAccount(account);
