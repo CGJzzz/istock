@@ -176,6 +176,7 @@ public class StockInfoCtl {
                     }else {
                         jsonObject.put("code", 409);
                         jsonObject.put("tips", "用户持有此股的股数小于卖出数额");
+                        jsonObject.put("num",total);
                         return jsonObject;
                     }
 

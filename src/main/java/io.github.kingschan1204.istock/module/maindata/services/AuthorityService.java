@@ -1,7 +1,6 @@
 package io.github.kingschan1204.istock.module.maindata.services;
 
 import io.github.kingschan1204.istock.module.maindata.po.Authority;
-import io.github.kingschan1204.istock.module.maindata.po.User;
 import io.github.kingschan1204.istock.module.maindata.repository.AuthorityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -9,7 +8,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,10 +34,10 @@ public class AuthorityService {
 
     //查询委托,参数:用户账号account+股票代码code+behavior的数量
 
-    public List<Authority> searchByAccountCodeBehaviro(String account, String code, String behaviro){
+    public List<Authority> searchByAccountCodeBehaviro(String account, String code, String behavior){
         Query query=new Query();
         //query.addCriteria(Criteria.where("account").is(account).and("code").is(code).and("behavior").is(behaviro));
-        query.addCriteria(Criteria.where("account").ne("root1"));
+        query.addCriteria(Criteria.where("account").is(account).and("code").is(code).and("behavior").is(behavior));
         List<Authority> list=template.find(query,Authority.class);
         return list;
     }

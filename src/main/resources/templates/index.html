@@ -64,7 +64,7 @@
                         <option value="">请选择所属行业</option>
                         <#list industry as text>
                         <option value="${text}">${text}</option>
-                        </#list>
+                    </#list>
                     </select>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                     <li><a href="#" id="report_btn">历史财务报表</a></li>
                 </ul>
             </div>
-            <button><a href="/userLogin">登录</a> </button>
+            <button><a href="/userLogin">登录</a></button>
             <textarea> 用户名:${account!} , 余额:${balance!}</textarea>
         </form>
     </div>
@@ -117,7 +117,7 @@
             datatype: "json",
             colNames: ['代码', '名称', '市场', '价格', '昨收', '涨幅', 'PE(动)',
                 'PE(静)', '市净率', '总市值', '每股净资产', '股息(动)', '股息(静)',
-                '5年平均股息','最新ROE','5年平均ROE', '上次分红', '行业'],
+                '5年平均股息', '最新ROE', '5年平均ROE', '上次分红', '行业'],
             colModel: [
 
                 {label: 'code', name: 'code', width: 110},
@@ -195,6 +195,7 @@
         var ss = getPageSize();
         $("#jqGrid").jqGrid('setGridWidth', ss.WinW - 10).jqGrid('setGridHeight', ss.WinH - 150);
     }
+
     //刷新列表
     function reloadStock() {
         //此处可以添加对查询数据的合法验证
@@ -206,7 +207,7 @@
         var industry = $("#industry").val();
         $("#jqGrid").jqGrid('setGridParam', {
             datatype: 'json',
-            postData: {'code': code, 'type': type, 'pb': pb, 'dy': dy,'industry':industry},
+            postData: {'code': code, 'type': type, 'pb': pb, 'dy': dy, 'industry': industry},
             page: 1
         }).trigger("reloadGrid");
     }
@@ -259,7 +260,7 @@
         var rowData = $("#jqGrid").jqGrid('getRowData', ids);
         window.open("/stock/report/" + rowData.code);
     });
-    $("#baseinfo_btn").click(function (){
+    $("#baseinfo_btn").click(function () {
         var ids = $("#jqGrid").jqGrid('getGridParam', 'selrow');
         if (null == ids) {
             alert("请选择要查看的股票!");

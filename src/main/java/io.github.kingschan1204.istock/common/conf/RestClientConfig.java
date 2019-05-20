@@ -58,21 +58,21 @@ public class RestClientConfig {
             Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                     .register("http", PlainConnectionSocketFactory.getSocketFactory())
                     .register("https", sslConnectionSocketFactory).build();// 注册http和https请求
-            // 开始设置连接池
-            PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-            poolingHttpClientConnectionManager.setMaxTotal(500); // 最大连接数500
-            poolingHttpClientConnectionManager.setDefaultMaxPerRoute(100); // 同路由并发数100
-            httpClientBuilder.setConnectionManager(poolingHttpClientConnectionManager);
-            httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, true)); // 重试次数
-            HttpClient httpClient = httpClientBuilder.build();
-            HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient); // httpClient连接配置
-            clientHttpRequestFactory.setConnectTimeout(20000);              // 连接超时
-            clientHttpRequestFactory.setReadTimeout(30000);                 // 数据读取超时时间
-            clientHttpRequestFactory.setConnectionRequestTimeout(20000);    // 连接不够用的等待时间
-            return clientHttpRequestFactory;
-        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-            log.error("初始化HTTP连接池出错{}", e);
-        }
+        // 开始设置连接池
+        PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+        poolingHttpClientConnectionManager.setMaxTotal(500); // 最大连接数500
+        poolingHttpClientConnectionManager.setDefaultMaxPerRoute(100); // 同路由并发数100
+        httpClientBuilder.setConnectionManager(poolingHttpClientConnectionManager);
+        httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, true)); // 重试次数
+        HttpClient httpClient = httpClientBuilder.build();
+        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient); // httpClient连接配置
+        clientHttpRequestFactory.setConnectTimeout(20000);              // 连接超时
+        clientHttpRequestFactory.setReadTimeout(30000);                 // 数据读取超时时间
+        clientHttpRequestFactory.setConnectionRequestTimeout(20000);    // 连接不够用的等待时间
+        return clientHttpRequestFactory;
+    } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+        log.error("初始化HTTP连接池出错{}", e);
+    }
         return null;
     }
 }
