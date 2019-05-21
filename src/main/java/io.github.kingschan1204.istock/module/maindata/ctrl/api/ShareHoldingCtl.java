@@ -43,7 +43,7 @@ public class ShareHoldingCtl {
         shareHolding.setNameOfShare(nameOfShare);
         shareHolding.setNumber(number);
         shareHolding.setPriceFirst(priceFirst);
-        shareHoldingService.addShareHolding(shareHolding);
+        shareHoldingService.insert(shareHolding);
 
         user = userService.queryUserAfterLogin(account);
         JSONObject jsonObject = new JSONObject();

@@ -17,11 +17,6 @@ public class ShareHoldingService {
     @Autowired
     private ShareHoldingRepository shareHoldingRepository;
 
-    public boolean addShareHolding(ShareHolding shareHolding){
-        template.save(shareHolding);
-        return true;
-    }
-
     //用户查看自己的全部持有股票
     public List<ShareHolding> search(String account){
         Query query = new Query();
@@ -33,7 +28,7 @@ public class ShareHoldingService {
     //供服务器查询用户特点股票持有量
     public List<ShareHolding> searchSpecificCode(String account,String code){
         Query query = new Query();
-        query.addCriteria(Criteria.where("account").is(account).and("code").is(code));
+        query.addCriteria(Criteria.where("account").is(account));
         List<ShareHolding> list = template.find(query, ShareHolding.class);
         return list;
     }
@@ -44,9 +39,8 @@ public class ShareHoldingService {
         }
     }
 
-    public void insert(ShareHolding shareHolding){
-        if(shareHolding!=null){
-            template.insert(shareHolding);
-        }
+    public boolean insert(ShareHolding shareHolding){
+        template.insert(shareHolding);
+        return true;
     }
 }

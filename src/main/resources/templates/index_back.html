@@ -3,28 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-	<!--匹配移动端-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>股票筛选</title>
-    <!--安装bootstrap-->
-    <!--第一步必须先引入:jquery.js,   bootstarp引入之前必须先引入1.9以上版本的jquery,因为bootstarp是简历在jquery基础上的-->
-    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-    <!--生成占位图-->
-    <script src="/js/holder.js"></script>
-    <!--css-->
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <!--bootstrap.js-->
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-
     <style>
-		*{
-            font-family:微软雅黑;
-        }
-		
-        body{
-            padding-top:50px;
-        }
-		
         div.header
         　　 {
             　　text-align: center;
@@ -37,50 +17,14 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="http://res.51so.info/ui.jqgrid-bootstrap.css"/>
 </head>
-<body style="padding: 20px 0px 0px 10px;overflow: auto;">
-		<!--导航条最外部 navbar-fixed-top 表示固定在顶部,(直接固定在顶部会使得标题被遮住,所以需要给body添加一个padding-top值)-->
-        <nav class="navbar navbar-inverse navbar-fixed-top"> <!-- navbar-inverse 是整个导航条为黑色, 默认是navbar-default -->
-
-            <div class="container"> <!--这里再加一个div 类container是为了当导航条固定在顶部的时候,把里边的内容居中-->
-
-                <!-- 1 . 左侧logo部分和右侧汉堡菜单部分-->
-                <div class="navbar-header">
-
-                    <!--这里可以直接给a标签里放一个img,作为logo-->
-                    <a href="" class="navbar-brand">安信股票交易系统</a>   <!-- 左侧logo部分 a连接加 navbar-brand 起对齐作用 -->
-                    <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mynavbar"> <!-- 右侧汉堡菜单部分,点击后出现navbar菜单栏 , 主要靠 data-target="id名" ,然后去寻找下方的合并区内容-->
-                        <!--这里的三个span是代表汉堡菜单的标签,一个span代表一根横线 -->
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-
-                <!-- 2 . 这里是手机端显示出来的合并区,点击汉堡按钮出现的内容,加上collapse类默认手机端是隐藏-->
-                <div class="collapse navbar-collapse" id="mynavbar">
-                    <!-- 2.1 这里是合并区显示的横条菜单栏,使用nav标签后边跟navbar-nav-->
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="">行情</a></li>    <!--class="active" 代表默认选中的表单,使用JQuery事件滑动到谁身上就添加一个active-->
-                        <li><a href="">帮助</a></li>
-                    </ul>
-
-                    <!-- 2.2 这里是合并区右侧的一个网站标志,这里将他设置为右浮动-->
-                    <ul class="nav navbar-nav navbar-right">  <!--这里是浮动到右边的一个标志,需要用navbar-right对齐到右侧-->
-                        <li><a href="">用户名:${account!} &nbsp &nbsp &nbsp 余额:${balance!}</a></li>
-						<li><a href="/userLogin">登录</a></li>
-                    </ul>
-                </div>
-            </div>
-
-        </nav>
-	<br><br><br><br>
+<body style="padding: 20px 0px 0px 10px;overflow: auto">
 <div class="row" style="margin-bottom: 10px;">
     <div class="col-md-12" style="padding-left: 30px;">
         <form class="form-inline" onkeydown="if(event.keyCode==13){reloadStock(); return false;}">
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon">$</div>
-                    <input type="textb" class="form-control" id="stockCode" placeholder="代码 / 股票名称" maxlength="6">
+                    <input type="text" class="form-control" id="stockCode" placeholder="代码 / 股票名称" maxlength="6">
                 </div>
             </div>
             <div class="form-group">
@@ -120,7 +64,7 @@
                         <option value="">请选择所属行业</option>
                         <#list industry as text>
                         <option value="${text}">${text}</option>
-                        </#list>
+                    </#list>
                     </select>
                 </div>
             </div>
@@ -141,8 +85,8 @@
                     <li><a href="#" id="report_btn">历史财务报表</a></li>
                 </ul>
             </div>
-            
-           
+            <button><a href="/userLogin">登录</a></button>
+            <textarea> 用户名:${account!} , 余额:${balance!}</textarea>
         </form>
     </div>
 </div>
@@ -173,7 +117,7 @@
             datatype: "json",
             colNames: ['代码', '名称', '市场', '价格', '昨收', '涨幅', 'PE(动)',
                 'PE(静)', '市净率', '总市值', '每股净资产', '股息(动)', '股息(静)',
-                '5年平均股息','最新ROE','5年平均ROE', '上次分红', '行业'],
+                '5年平均股息', '最新ROE', '5年平均ROE', '上次分红', '行业'],
             colModel: [
 
                 {label: 'code', name: 'code', width: 110},
@@ -251,6 +195,7 @@
         var ss = getPageSize();
         $("#jqGrid").jqGrid('setGridWidth', ss.WinW - 10).jqGrid('setGridHeight', ss.WinH - 150);
     }
+
     //刷新列表
     function reloadStock() {
         //此处可以添加对查询数据的合法验证
@@ -262,7 +207,7 @@
         var industry = $("#industry").val();
         $("#jqGrid").jqGrid('setGridParam', {
             datatype: 'json',
-            postData: {'code': code, 'type': type, 'pb': pb, 'dy': dy,'industry':industry},
+            postData: {'code': code, 'type': type, 'pb': pb, 'dy': dy, 'industry': industry},
             page: 1
         }).trigger("reloadGrid");
     }
@@ -315,7 +260,7 @@
         var rowData = $("#jqGrid").jqGrid('getRowData', ids);
         window.open("/stock/report/" + rowData.code);
     });
-    $("#baseinfo_btn").click(function (){
+    $("#baseinfo_btn").click(function () {
         var ids = $("#jqGrid").jqGrid('getGridParam', 'selrow');
         if (null == ids) {
             alert("请选择要查看的股票!");

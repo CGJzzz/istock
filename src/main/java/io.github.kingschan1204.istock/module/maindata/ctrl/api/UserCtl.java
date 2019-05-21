@@ -2,21 +2,20 @@ package io.github.kingschan1204.istock.module.maindata.ctrl.api;
 
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kingschan1204.istock.module.maindata.po.Authority;
 import io.github.kingschan1204.istock.module.maindata.po.User;
 import io.github.kingschan1204.istock.module.maindata.services.AuthorityService;
 import io.github.kingschan1204.istock.module.maindata.services.UserService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Api(description = "用户功能")
@@ -51,11 +50,13 @@ public class UserCtl {
             session.setAttribute("account",accountName);
             session.setAttribute("balance",user.getBalance());
             jsonObject.put("code",200);//设置login页面状态码,自定义
+            jsonObject.put("tips","登陆成功");
         }else {
             //401 Unauthorized - [*]：表示用户没有权限（令牌、用户名、密码错误）。
             session.setAttribute("account",null);
             session.setAttribute("balance",0d);
             jsonObject.put("code",401);
+            jsonObject.put("tips","登陆失败");
         }
         //设置用户信息查询部分
         return jsonObject;

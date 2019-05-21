@@ -3,7 +3,6 @@ package io.github.kingschan1204.istock.module.task;
 import io.github.kingschan1204.istock.module.maindata.po.Authority;
 import io.github.kingschan1204.istock.module.maindata.po.ShareHolding;
 import io.github.kingschan1204.istock.module.maindata.po.User;
-import io.github.kingschan1204.istock.module.maindata.repository.AuthorityRepository;
 import io.github.kingschan1204.istock.module.maindata.services.AuthorityService;
 import io.github.kingschan1204.istock.module.maindata.services.ShareHoldingService;
 import io.github.kingschan1204.istock.module.maindata.services.UserService;
@@ -54,7 +53,9 @@ public class AuthorityCalculateTask implements Job {
         queryOut.with(new Sort(Sort.Direction.ASC, "code").and(new Sort(Sort.Direction.ASC, "priceOrder")).and(new Sort(Sort.Direction.DESC, "numberOfShare")));
         List<Authority> listOut = mongoTemplate.find(queryOut, Authority.class);
         System.out.println("此时卖方是"+listOut);
+        //有委托才有撮合
         if (listOut.size() > 0 && listIn.size() > 0) {
+            //并不确定每一步都能撮合完某一单,于是用for两层循环
             for (Authority authorityIn : listIn) {
                 for (Authority authorityOut : listOut) {
                     if (authorityIn.getCode().equals(authorityOut.getCode())
@@ -89,7 +90,8 @@ public class AuthorityCalculateTask implements Job {
                                     authorityIn.setNumberOfShare(numIn - numOut);
 
                                     //更新买方余额
-                                    userIn.setBalance(userIn.getBalance() - numOut * authorityOut.getPriceOrder());
+                                    //买方先扣钱,扣完钱补回差额所以是+
+                                    userIn.setBalance(userIn.getBalance() + authorityOut.getPriceOrder()*numOut);
                                     //更新卖方余额
                                     userOut.setBalance(userOut.getBalance() + numOut * authorityOut.getPriceOrder());
                                     authorityService.save(authorityIn);
