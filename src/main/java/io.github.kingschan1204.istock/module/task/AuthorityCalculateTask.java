@@ -91,7 +91,7 @@ public class AuthorityCalculateTask implements Job {
 
                                     //更新买方余额
                                     //买方先扣钱,扣完钱补回差额所以是+
-                                    userIn.setBalance(userIn.getBalance() + authorityOut.getPriceOrder()*numOut);
+                                    userIn.setBalance(userIn.getBalance() + (authorityIn.getPriceOrder()-authorityOut.getPriceOrder())*numOut);
                                     //更新卖方余额
                                     userOut.setBalance(userOut.getBalance() + numOut * authorityOut.getPriceOrder());
                                     authorityService.save(authorityIn);
@@ -124,7 +124,7 @@ public class AuthorityCalculateTask implements Job {
                                     authorityIn.setNumberOfShare(0L);
                                     authorityOut.setNumberOfShare(numOut - numIn);
                                     //更新买方余额
-                                    userIn.setBalance(userIn.getBalance() - numIn * authorityOut.getPriceOrder());
+                                    userIn.setBalance(userIn.getBalance() + numIn * (authorityIn.getPriceOrder()-authorityOut.getPriceOrder()));
                                     //更新卖方余额
                                     userOut.setBalance(userOut.getBalance() + numIn * authorityOut.getPriceOrder());
                                     authorityService.save(authorityIn);
