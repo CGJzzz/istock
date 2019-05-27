@@ -82,6 +82,8 @@
                     <li class="active"><a href="">行情</a></li>
                     <!--class="active" 代表默认选中的表单,使用JQuery事件滑动到谁身上就添加一个active-->
                     <li><a href="">委托</a></li>
+                    <li><a href="https://mall.essence.com.cn/mall/views/index.html?t=0.6531243278262502">商城</a></li>
+                    <li><a href="https://finance.sina.com.cn/stock/">资讯</a></li>
                 </ul>
 
                 <!-- 2.2 这里是合并区右侧的一个网站标志,这里将他设置为右浮动-->
@@ -105,8 +107,8 @@
             <tr>
                 <th>股票代码</th>
                 <th>股票名称</th>
-                <th>交易数量</th>
-                <th>交易价格</th>
+                <th>持仓数量（/股）</th>
+                <th>最新价格（/元）</th>
             </tr>
             </thead>
             <tbody>
@@ -121,30 +123,21 @@
             </#list>
             </tbody>
         </table>
+
     </div>
 
     <div class="row">
-
-        <div class="col-md-2"></div>
-        <div class="col-md-2"></div>
-        <div class="col-md-2"></div>
-        <div class="col-md-1"></div>
-        <div class="col-md-1"></div>
-        <div class="col-md-2"></div>
-        <div class="col-md-1"></div>
-        <div class="col-md-2"></div>
-        <table style="width: 1140px;margin:0 auto;text-align:center;"
-               class="table table-striped table-hover table-bordered">
+        <table class="table table-striped">
             <thead>
             <tr>
                 <th>委托者</th>
                 <th>委托日期</th>
-                <th>对象代码</th>
-                <th>对象名字</th>
+                <th>股票代码</th>
+                <th>股票名称</th>
                 <th>限价委托</th>
-                <th>价格(/股)</th>
+                <th>价格(元/股)</th>
                 <th>数量（股>=100）</th>
-                <th>总价格</th>
+                <th>总价格（元）</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -152,7 +145,7 @@
             <tr>
                 <td>${account!}</td>
                 <td>${orderDate!}</td>
-                <td>{{info._id}}<br>{{stock.name}}</td>
+                <td>{{info._id}}</td>
                 <td>{{stock.name}}</td>
                 <td>是</td>
                 <td>{{stock.price}}</td>
@@ -171,9 +164,10 @@
 
             </tbody>
         </table>
-    </div>
-    <div class="media-middle">
-        <button onClick="check()">确认</button>
+        <div class="media-middle">
+            <button onClick="check()">确认</button>
+        </div>
+        <br>
     </div>
 
     <div class="row">

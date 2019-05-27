@@ -2,9 +2,7 @@ package io.github.kingschan1204.istock.module.maindata.ctrl.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.kingschan1204.istock.module.maindata.po.Authority;
-import io.github.kingschan1204.istock.module.maindata.po.ShareHolding;
-import io.github.kingschan1204.istock.module.maindata.po.User;
+import io.github.kingschan1204.istock.module.maindata.po.*;
 import io.github.kingschan1204.istock.module.maindata.services.AuthorityService;
 import io.github.kingschan1204.istock.module.maindata.services.ShareHoldingService;
 import io.github.kingschan1204.istock.module.maindata.services.StockInfoService;
@@ -41,6 +39,10 @@ public class StockInfoCtl {
     private UserService userService;
     @Autowired
     private ShareHoldingService shareHoldingService;
+    @Autowired
+    private AuthorityInQuery inQuery;
+    @Autowired
+    private AuthorityOutQuery outQuery;
 
     @ApiOperation(value = "股票信息", notes = "根据传入股票代码参数返回列表信息")
     @GetMapping("/stock/info/{code}")
@@ -57,7 +59,9 @@ public class StockInfoCtl {
         model.addAttribute("infoList", list);
 
         //统一时间
-        String orderDate = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String orderDate=df.format(localDateTime);
         HttpSession session = request.getSession();
         session.setAttribute("orderDate", orderDate);
         return "/stock/info/stock_info";
@@ -82,33 +86,36 @@ public class StockInfoCtl {
         String behavior = "in";
         if (account != null) {
             if (user != null) {
-                //不使用自动装箱
-                Double total = Double.valueOf(priceOrder * num);
-                if (Double.compare(user.getBalance(), total) >= 0) {
-                    authority.setAccount(account);
-                    authority.setCode(code);
-                    authority.setDate(orderDate);
-                    authority.setNumberOfShare(num);
-                    authority.setPriceOrder(priceOrder);
-                    authority.setBehavior(behavior);
-                    authority.setStatus("receive");
-                    authority.setPriceFinal(0.0d);
+                synchronized (StockInfoCtl.class) {
+                    //不使用自动装箱
+                    Double total = Double.valueOf(priceOrder * num);
+                    if (Double.compare(user.getBalance(), total) >= 0) {
+                        authority.setAccount(account);
+                        authority.setCode(code);
+                        authority.setDate(orderDate);
+                        authority.setNumberOfShare(num);
+                        authority.setPriceOrder(priceOrder);
+                        authority.setBehavior(behavior);
+                        authority.setStatus("receive");
+                        authority.setPriceFinal(0.0d);
 
-                    //委托订单号
-                    String authorityOrderSerial = orderDate + account + code;
-                    authority.setAuthorityOrderSerial(authorityOrderSerial);
-                    authorityService.addAuthority(authority);
-                    jsonObject.put("code", 200);//设置login页面状态码,自定义
-                    jsonObject.put("authorityOrderSerial", authorityOrderSerial);
-                    user.setBalance(user.getBalance() - total);
-                    session.setAttribute("balance", user.getBalance());
-                    userService.saveUser(user);
-                    return jsonObject;
+                        //委托订单号
+                        String authorityOrderSerial = orderDate + account + code;
+                        authority.setAuthorityOrderSerial(authorityOrderSerial);
+                        inQuery.addAuthority(authority);
+                        authorityService.addAuthority(authority);
+                        jsonObject.put("code", 200);//设置login页面状态码,自定义
+                        jsonObject.put("authorityOrderSerial", authorityOrderSerial);
+                        user.setBalance(user.getBalance() - total);
+                        session.setAttribute("balance", user.getBalance());
+                        userService.saveUser(user);
+                        return jsonObject;
 
-                } else {
-                    jsonObject.put("code", 409);
-                    jsonObject.put("tips", "余额不足");
-                    return jsonObject;
+                    } else {
+                        jsonObject.put("code", 409);
+                        jsonObject.put("tips", "余额不足");
+                        return jsonObject;
+                    }
                 }
             } else {
                 jsonObject.put("code", 401);
@@ -138,54 +145,63 @@ public class StockInfoCtl {
         String behavior = "out";
         if (account != null) {
             if (user != null) {
-                //查找用户名下所有持仓
-                List<ShareHolding> list = shareHoldingService.searchSpecificCode(account,code);
-                if (list.size() > 0) {
-                    //当用户此有该股数量>卖出的数量才可以委托
-                    //此函数可以正确显示目前此有股票数量,但需要优化
-                    Long total=0L;
-                    for(ShareHolding shareHolding:list){
-                        //先去持仓查询股票code特有的数量;
-                        total+=shareHolding.getNumber();
-                    }
-                    //根据委托 减去委托卖出的数量->得到的当前数量,根据这个数才可以继续计算.
-                    List<Authority> listOfAuthority=authorityService.searchByAccountCodeBehaviro(account,code,"out");
-                    for (Authority a:listOfAuthority){
-                        total-=a.getNumberOfShare();
-                    }
-                    if(Long.compare(total,num)>=0){
-                        authority.setAccount(account);
-                        authority.setCode(code);
-                        authority.setDate(orderDate);
-                        authority.setNumberOfShare(num);
-                        authority.setPriceOrder(priceOrder);
-                        authority.setBehavior(behavior);
-                        authority.setStatus("receive");
-                        authority.setPriceFinal(0.0d);
+                synchronized (StockInfoCtl.class) {
+                    //查找用户名下所有持仓
+                    List<ShareHolding> list = shareHoldingService.searchSpecificCode(account, code);
+                    if (list.size() > 0) {
+                        //当用户此有该股数量>卖出的数量才可以委托
+                        //此函数可以正确显示目前此有股票数量,但需要优化
 
-                        //委托订单号
-                        String authorityOrderSerial = orderDate + account + code;
-                        authority.setAuthorityOrderSerial(authorityOrderSerial);
-                        authorityService.addAuthority(authority);
-                        jsonObject.put("code", 200);//设置login页面状态码,自定义
-                        jsonObject.put("tips", "委托成功");
-                        jsonObject.put("authorityOrderSerial", authorityOrderSerial);
+                        Long total = 0L;
 
-                        //数量关系
-                        return jsonObject;
-                    }else {
-                        jsonObject.put("code", 409);
-                        jsonObject.put("tips", "用户持有此股的股数小于卖出数额");
-                        jsonObject.put("num",total);
-                        return jsonObject;
+                            total = list.get(0).getNumber();
+
+                       // System.out.println("当前持仓："+total);
+                       // System.out.println("卖出数目:"+num);
+                        //根据委托 减去委托卖出的数量->得到的当前数量,根据这个数才可以继续计算.
+                       /* List<Authority> listOfAuthority = authorityService.searchByAccountCodeBehaviro(account, code, "out");
+                        for (Authority a : listOfAuthority) {
+                            total -= a.getNumberOfShare();
+                        }*/
+                        if (Long.compare(total, num) >= 0) {
+                            authority.setAccount(account);
+                            authority.setCode(code);
+                            authority.setDate(orderDate);
+                            authority.setNumberOfShare(num);
+                            authority.setPriceOrder(priceOrder);
+                            authority.setBehavior(behavior);
+                            authority.setStatus("receive");
+                            authority.setPriceFinal(0.0d);
+
+                            ShareHolding shareHoldingIn=list.get(0);
+                            shareHoldingIn.setNumber(shareHoldingIn.getNumber()-num);
+                            shareHoldingService.save(shareHoldingIn);
+                            //System.out.println("卖出后余仓"+shareHoldingIn.getNumber());
+                            //委托订单号
+                            String authorityOrderSerial = orderDate + account + code;
+                            authority.setAuthorityOrderSerial(authorityOrderSerial);
+                            outQuery.addAuthority(authority);
+                            authorityService.addAuthority(authority);
+                            jsonObject.put("code", 200);//设置login页面状态码,自定义
+                            jsonObject.put("tips", "委托成功");
+                            jsonObject.put("authorityOrderSerial", authorityOrderSerial);
+
+                            //数量关系
+                            return jsonObject;
+                        } else {
+                            jsonObject.put("code", 409);
+                            jsonObject.put("tips", "用户持有此股的股数小于卖出数额");
+                            jsonObject.put("num", total);
+                            return jsonObject;
+                        }
                     }
 
-                } else {
+                else {
                     jsonObject.put("code", 409);
                     jsonObject.put("tips", "用户并没有持有此股");
                     return jsonObject;
-                }
-            } else {
+                }}}
+            else {
                 jsonObject.put("code", 401);
                 jsonObject.put("tips", "账号不存在");
                 return jsonObject;

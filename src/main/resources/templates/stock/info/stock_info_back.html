@@ -163,13 +163,14 @@
         <div class="col-md-2"></div>
         <div class="col-md-1"></div>
         <div class="col-md-2"></div>
+        <div class="col-md-2 info-title">用户持仓</div>
         <table style="width: 1140px;margin:0 auto;text-align:center;" class="table table-striped table-hover table-bordered">
             <thead>
             <tr>
                 <th>委托者</th>
                 <th>委托日期</th>
-                <th>对象代码</th>
-                <th>对象名字</th>
+                <th>股票代码</th>
+                <th>股票名称</th>
                 <th>限价委托</th>
                 <th>价格(/股)</th>
                 <th>数量（股>=100）</th>
@@ -181,7 +182,7 @@
             <tr>
                 <td>${account!}</td>
                 <td>${orderDate!}</td>
-                <td>{{info._id}}<br>{{stock.name}}</td>
+                <td>{{info._id}}</td>
                 <td>{{stock.name}}</td>
                 <td>是</td>
                 <td>{{stock.price}}</td>
