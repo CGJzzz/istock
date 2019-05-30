@@ -50,7 +50,7 @@ public class StockInfoCtl {
                             HttpServletRequest request) {
         JSONObject json = stockInfoService.getStockInfo(code);
         String account = (String) request.getSession().getAttribute("account");
-        List<ShareHolding> list = shareHoldingService.search(account);
+        List<ShareHolding> list= shareHoldingService.search(account);
         StockVo stockVo = JSON.toJavaObject(json, StockVo.class);
         model.addAttribute("pagetitle", String.format("%s-%s", code, stockVo.getName()));
         model.addAttribute("data", json.toJSONString());
@@ -61,7 +61,7 @@ public class StockInfoCtl {
         //统一时间
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.now();
-        String orderDate=df.format(localDateTime);
+        String orderDate = df.format(localDateTime);
         HttpSession session = request.getSession();
         session.setAttribute("orderDate", orderDate);
         return "/stock/info/stock_info";
@@ -129,6 +129,7 @@ public class StockInfoCtl {
         }
 
     }
+
     @ApiOperation(value = "委托卖出", notes = "未实行前后端分离,需要用户先登录后才能使用委托买入卖出功能")
     @PostMapping(value = "/stock/authorize/out/{code}")
     @ResponseBody
@@ -139,6 +140,7 @@ public class StockInfoCtl {
                                           HttpServletRequest request) {
         HttpSession session = request.getSession();
         String account = (String) session.getAttribute("account");
+        System.out.println(account+"***");
         String orderDate = (String) session.getAttribute("orderDate");
         JSONObject jsonObject = new JSONObject();
         User user = userService.queryUserAfterLogin(account);
@@ -148,16 +150,18 @@ public class StockInfoCtl {
                 synchronized (StockInfoCtl.class) {
                     //查找用户名下所有持仓
                     List<ShareHolding> list = shareHoldingService.searchSpecificCode(account, code);
+                    System.out.println(list);
                     if (list.size() > 0) {
                         //当用户此有该股数量>卖出的数量才可以委托
                         //此函数可以正确显示目前此有股票数量,但需要优化
 
                         Long total = 0L;
 
-                            total = list.get(0).getNumber();
+                        total = list.get(0).getNumber();
 
-                       // System.out.println("当前持仓："+total);
-                       // System.out.println("卖出数目:"+num);
+                        //System.out.println(total);
+                        //System.out.println("当前持仓："+total);
+                        // System.out.println("卖出数目:"+num);
                         //根据委托 减去委托卖出的数量->得到的当前数量,根据这个数才可以继续计算.
                        /* List<Authority> listOfAuthority = authorityService.searchByAccountCodeBehaviro(account, code, "out");
                         for (Authority a : listOfAuthority) {
@@ -173,10 +177,12 @@ public class StockInfoCtl {
                             authority.setStatus("receive");
                             authority.setPriceFinal(0.0d);
 
-                            ShareHolding shareHoldingIn=list.get(0);
-                            shareHoldingIn.setNumber(shareHoldingIn.getNumber()-num);
+                            ShareHolding shareHoldingIn = list.get(0);
+                            shareHoldingIn.setNumber(shareHoldingIn.getNumber() - num);
+                            System.out.println(shareHoldingIn + "*******___*");
+
                             shareHoldingService.save(shareHoldingIn);
-                            //System.out.println("卖出后余仓"+shareHoldingIn.getNumber());
+                            System.out.println("卖出后余仓" + shareHoldingIn.getNumber());
                             //委托订单号
                             String authorityOrderSerial = orderDate + account + code;
                             authority.setAuthorityOrderSerial(authorityOrderSerial);
@@ -194,14 +200,13 @@ public class StockInfoCtl {
                             jsonObject.put("num", total);
                             return jsonObject;
                         }
+                    } else {
+                        jsonObject.put("code", 409);
+                        jsonObject.put("tips", "用户并没有持有此股");
+                        return jsonObject;
                     }
-
-                else {
-                    jsonObject.put("code", 409);
-                    jsonObject.put("tips", "用户并没有持有此股");
-                    return jsonObject;
-                }}}
-            else {
+                }
+            } else {
                 jsonObject.put("code", 401);
                 jsonObject.put("tips", "账号不存在");
                 return jsonObject;

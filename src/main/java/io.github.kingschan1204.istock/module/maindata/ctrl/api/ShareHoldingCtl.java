@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.text.DecimalFormat;
+
 @Api(description = "用户持仓管理")
 @Controller
 public class ShareHoldingCtl {
@@ -40,9 +42,10 @@ public class ShareHoldingCtl {
                                 @Autowired User user) {
         shareHolding.setAccount(account);
         shareHolding.setCode(code);
+        DecimalFormat df = new DecimalFormat("#.00");
         shareHolding.setNameOfShare(nameOfShare);
         shareHolding.setNumber(number);
-        shareHolding.setPriceFirst(priceFirst);
+        shareHolding.setPriceFirst(Double.valueOf(df.format((double)priceFirst)));
         shareHoldingService.insert(shareHolding);
 
         user = userService.queryUserAfterLogin(account);
